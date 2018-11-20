@@ -10,7 +10,7 @@ class Graphics {
     // Setup functions
     bool Initialize(int, int);
     bool InitializeCamera(int, int);
-    void AddObject(Object*);
+    void AddObject(std::string, Object*);
 
     // Runtime function
     void Update(unsigned);

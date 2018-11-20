@@ -41,7 +41,7 @@ bool Engine::Initialize() {
 
 void Engine::LoadGameObjects() {
   Object* tmp = new Object("window.obj");
-  m_graphics->AddObject(tmp);
+  m_graphics->AddObject("shader", tmp);
 }
 
 void Engine::Run() {

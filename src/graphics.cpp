@@ -70,7 +70,16 @@ bool Graphics::InitializeCamera(int width, int height) {
   return true;
 }
 
-void Graphics::AddObject(Object* object) {
+void Graphics::AddObject(std::string shader_name, Object* object) {
+  Shader* tmp = Shader::LoadShader(shader_name);
+  m_shader_list[shader_name] = tmp;
+
+  if (m_render_list.find(shader_name) != m_render_list.end()) {
+    m_render_list[shader_name].push_back(object);
+  } else {
+    std::vector<Object*> temp(1, object);
+    m_render_list[shader_name] = temp;
+  }
   m_objects.push_back(object);
 }
 

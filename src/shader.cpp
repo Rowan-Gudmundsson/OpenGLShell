@@ -1,6 +1,6 @@
 #include "shader.h"
 
-Shader* LoadShader(std::string shader_name) {
+Shader* Shader::LoadShader(std::string shader_name) {
   // So we dont load the same shader more than once
   static std::unordered_map<std::string, Shader*> shader_map;
 
