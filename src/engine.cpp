@@ -40,7 +40,8 @@ bool Engine::Initialize() {
 }
 
 void Engine::LoadGameObjects() {
-
+  Object* tmp = new Object("window.obj");
+  m_graphics->AddObject(tmp);
 }
 
 void Engine::Run() {
