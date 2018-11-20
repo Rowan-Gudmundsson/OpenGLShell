@@ -95,7 +95,7 @@ void Graphics::Render() {
     i.second->Enable();
 
     // Send uniforms to shader
-    i.second->uniformMatrix4vf("proj_view_matrix", 1, GL_FALSE, glm::value_ptr(proj_view));
+    i.second->uniformMatrix4fv("proj_view_matrix", 1, GL_FALSE, glm::value_ptr(proj_view));
 
     // Itterate through all the objects to be rendered
     // by the currently active shader

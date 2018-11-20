@@ -5,7 +5,7 @@
 class Object {
   public:
     // Constructors
-    Object();
+    Object(std::string);
 
     // Runtime functions
     void Update(unsigned);

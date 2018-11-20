@@ -14,7 +14,7 @@ Engine::Engine(const std::string& name) {
   w_info.fullscreen = true;
 }
 
-bool Initialize() {
+bool Engine::Initialize() {
   // Window setup
   m_window = new Window();
   if (!m_window->Initialize(w_info.name, w_info.width, w_info.height)) {
@@ -78,9 +78,9 @@ void Engine::Run() {
 
 unsigned Engine::GetDT() {
   long long TimeNowMillis = GetCurrentTimeMillis();
-  assert(TimeNowMillis >= m_currentTimeMillis);
-  unsigned int DeltaTimeMillis = (unsigned int)(TimeNowMillis - m_currentTimeMillis);
-  m_currentTimeMillis = TimeNowMillis;
+  assert(TimeNowMillis >= m_current_time_millis);
+  unsigned int DeltaTimeMillis = (unsigned int)(TimeNowMillis - m_current_time_millis);
+  m_current_time_millis = TimeNowMillis;
   return DeltaTimeMillis;
 }
 

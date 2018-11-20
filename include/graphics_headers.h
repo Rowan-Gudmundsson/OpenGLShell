@@ -28,8 +28,9 @@
 
 struct Vertex {
   Vertex() {}
-  Vertex(glm::vec3 p, glm::vec3 u, glm::vec3 n) : position(p), uv(u), normal(n) {}
-  glm::vec3 position, uv, normal;
+  Vertex(glm::vec3 p, glm::vec2 u, glm::vec3 n) : position(p), uv(u), normal(n) {}
+  glm::vec2 uv;
+  glm::vec3 position, normal;
 };
 
 std::string load_file(std::string filename) {
@@ -38,4 +39,9 @@ std::string load_file(std::string filename) {
                       (std::istreambuf_iterator<char>()));
   file.close();
   return result;
+}
+
+std::string clip_path(std::string full_path) {
+  auto pos = full_path.find_last_of('/');
+  return full_path.substr(pos + 1);
 }

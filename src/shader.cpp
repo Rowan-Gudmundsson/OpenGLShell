@@ -148,7 +148,29 @@ bool Shader::Finalize()
   return true;
 }
 
-void uniformMatrix4fv(const std::string& name, GLsizei size, GLboolean transpose, const GLfloat* value) {
+void Shader::uniform1i(const std::string& name, GLint value) {
+  GLint location = GetUniformLocation(name);
+
+  if (location == INVALID_UNIFORM_LOCATION) {
+    std::cout << "Invalid location of uniform (" << name << ")" << std::endl;
+    return;
+  }
+
+  glUniform1i(location, value);
+}
+
+void Shader::uniform3fv(const std::string& name, GLsizei size, const GLfloat* value) {
+  GLint location = GetUniformLocation(name);
+
+  if (location == INVALID_UNIFORM_LOCATION) {
+    std::cout << "Invalid location of uniform (" << name << ")" << std::endl;
+    return;
+  }
+
+  glUniform3fv(location, size, value);
+}
+
+void Shader::uniformMatrix4fv(const std::string& name, GLsizei size, GLboolean transpose, const GLfloat* value) {
   GLint location = GetUniformLocation(name);
 
   if (location == INVALID_UNIFORM_LOCATION) {
@@ -161,7 +183,7 @@ void uniformMatrix4fv(const std::string& name, GLsizei size, GLboolean transpose
 
 GLint Shader::GetUniformLocation(const std::string& pUniformName)
 {
-    GLuint Location = glGetUniformLocation(m_shaderProg, pUniformName.c_str());
+    GLuint Location = glGetUniformLocation(m_shader_program, pUniformName.c_str());
 
     if (Location == INVALID_UNIFORM_LOCATION) {
         fprintf(stderr, "Warning! Unable to get the location of uniform '%s'\n", pUniformName.c_str());

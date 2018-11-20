@@ -41,11 +41,11 @@ Texture::Texture(std::string texture_name) {
     error = true;
   }
 
-  initialized = false;
+  m_initialized = false;
 }
 
 void Texture::InitializeTexture() {
-  if (!initialized) {
+  if (!m_initialized) {
     // Gen new texture location
     glGenTextures(1, &t_Location);
     // Bind newly generated texture to active
@@ -74,7 +74,7 @@ void Texture::InitializeTexture() {
     t_Image = nullptr;
     t_Blob = nullptr;
 
-    initialized = true;
+    m_initialized = true;
   }
 }
 
@@ -84,7 +84,7 @@ void Texture::BindTexture(GLenum t_Target) {
 }
 
 Texture::~Texture() {
-  if (!initialized) {
+  if (!m_initialized) {
     delete t_Image;
     delete t_Blob;
     t_Image = nullptr;
@@ -143,7 +143,7 @@ Model::Model(std::string model_name) {
 
 void Model::DrawModel(Shader* shader, bool draw_complex) {
   // Loop through meshes
-  for (auto i : meshes) {
+  for (auto i : m_meshes) {
     // Enable attribute pointers
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
@@ -175,10 +175,10 @@ void Model::DrawModel(Shader* shader, bool draw_complex) {
       }
     }
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.IB);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, i.IB);
 
     // Draw the triagles
-    glDrawElements(GL_TRIANGLES, mesh.num_indices, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, i.num_indices, GL_UNSIGNED_INT, 0);
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
@@ -226,9 +226,9 @@ void Model::LoadMesh(const aiMesh* mesh, const aiMaterial* material) {
   material->Get(AI_MATKEY_COLOR_DIFFUSE, diff);
   material->Get(AI_MATKEY_COLOR_SPECULAR, spec);
 
-  new_mesh.ambient_color = glm::vec3(amb.r, amb.g, amb.b);
-  new_mesh.diffuse_color = glm::vec3(diff.r, diff.g, diff.b);
-  new_mesh.specular_color = glm::vec3(spec.r, spec.g, spec.b);
+  new_mesh.ambient = glm::vec3(amb.r, amb.g, amb.b);
+  new_mesh.diffuse = glm::vec3(diff.r, diff.g, diff.b);
+  new_mesh.specular = glm::vec3(spec.r, spec.g, spec.b);
 
   {
     aiString pathname;
@@ -278,5 +278,5 @@ void Model::LoadMesh(const aiMesh* mesh, const aiMaterial* material) {
   );
 
   new_mesh.num_indices = Indices.size();
-  meshes.push_back(new_mesh);
+  m_meshes.push_back(new_mesh);
 }

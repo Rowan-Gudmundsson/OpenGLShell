@@ -19,7 +19,9 @@ class Shader {
     bool Finalize();
 
     // Uniform functions
-    void uniformMatrix4vf(const std::string&, GLsizei, GLboolean, const GLfloat*);
+    void uniform1i(const std::string&, GLint);
+    void uniform3fv(const std::string&, GLsizei, const GLfloat*);
+    void uniformMatrix4fv(const std::string&, GLsizei, GLboolean, const GLfloat*);
 
     // Destructors
     ~Shader();

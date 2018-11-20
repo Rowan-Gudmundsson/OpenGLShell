@@ -22,7 +22,7 @@ class Engine {
     long long GetCurrentTimeMillis();
 
     // Destructors
-    ~Engine()
+    ~Engine();
 
   private:
     Window* m_window;
