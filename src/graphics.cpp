@@ -70,6 +70,10 @@ bool Graphics::InitializeCamera(int width, int height) {
   return true;
 }
 
+void Graphics::AddObject(Object* object) {
+  m_objects.push_back(object);
+}
+
 void Graphics::Update(unsigned dt) {
   // Itterate through game objects and call the update function
   // on them

@@ -31,7 +31,7 @@ bool Window::Initialize(const std::string& name, int& width, int& height) {
       SDL_WINDOWPOS_CENTERED,
       width,
       height,
-      SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DEKSTOP
+      SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP
     );
     width = current.w;
     height = current.h;

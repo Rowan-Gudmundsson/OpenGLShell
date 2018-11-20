@@ -11,6 +11,7 @@ class Graphics {
     // Setup functions
     bool Initialize(int, int);
     bool InitializeCamera(int, int);
+    void AddObject(Object*);
 
     // Runtime function
     void Update(unsigned);
