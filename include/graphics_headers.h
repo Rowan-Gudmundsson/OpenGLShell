@@ -33,15 +33,5 @@ struct Vertex {
   glm::vec3 position, normal;
 };
 
-std::string load_file(std::string filename) {
-  std::fstream file(filename.c_str(), std::ios::in);
-  std::string result( (std::istreambuf_iterator<char>(file)),
-                      (std::istreambuf_iterator<char>()));
-  file.close();
-  return result;
-}
-
-std::string clip_path(std::string full_path) {
-  auto pos = full_path.find_last_of('/');
-  return full_path.substr(pos + 1);
-}
+std::string load_file(std::string);
+std::string clip_path(std::string);

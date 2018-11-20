@@ -1,6 +1,5 @@
 #pragma once
 
-#include "graphics_headers.h"
 #include "object.h"
 
 class Graphics {
