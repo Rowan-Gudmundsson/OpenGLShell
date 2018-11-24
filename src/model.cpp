@@ -1,6 +1,5 @@
 #include "model.h"
 
-
 /* ------------------------------------------------------------
  * Texture Class - For loading textures
  * -----------------------------------------------------------*/
@@ -148,6 +147,8 @@ void Model::DrawModel(Shader* shader, bool draw_complex) {
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
+    glEnableVertexAttribArray(4);
 
     glBindBuffer(GL_ARRAY_BUFFER, i.VB);
 
@@ -155,6 +156,8 @@ void Model::DrawModel(Shader* shader, bool draw_complex) {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, bitangent));
 
     if (draw_complex) {
       // Pass uniforms
@@ -183,6 +186,8 @@ void Model::DrawModel(Shader* shader, bool draw_complex) {
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(3);
+    glDisableVertexAttribArray(4);
 
     // Set active texture to nothing
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -197,17 +202,22 @@ void Model::LoadMesh(const aiMesh* mesh, const aiMaterial* material) {
   for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
     aiVector3D& position = mesh->mVertices[i];
     aiVector3D& normal = mesh->mNormals[i];
-
     if (mesh->mTextureCoords[0]) {
       aiVector3D& tex = mesh->mTextureCoords[0][i];
+      aiVector3D& tangent = mesh->mTangents[i];
+      aiVector3D& bitangent = mesh->mBitangents[i];
       Vertex v(glm::vec3(position.x, position.y, position.z),
                glm::vec2(tex.x, tex.y),
-               glm::vec3(normal.x, normal.y, normal.z));
+               glm::vec3(normal.x, normal.y, normal.z),
+               glm::vec3(tangent.x, tangent.y, tangent.z),
+               glm::vec3(bitangent.x, bitangent.y, bitangent.z));
       Vertices.push_back(v);
     } else {
       Vertex v(glm::vec3(position.x, position.y, position.z),
-               glm::vec2(0.0f, 0.0f),
-               glm::vec3(normal.x, normal.y, normal.z));
+               glm::vec2(0.0f),
+               glm::vec3(normal.x, normal.y, normal.z),
+               glm::vec3(0.0f),
+               glm::vec3(0.0f));
       Vertices.push_back(v);
     }
   }

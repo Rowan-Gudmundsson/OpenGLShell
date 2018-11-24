@@ -20,6 +20,7 @@ class Shader {
 
     // Uniform functions
     void uniform1i(const std::string&, GLint);
+    void uniform1f(const std::string&, GLfloat);
     void uniform3fv(const std::string&, GLsizei, const GLfloat*);
     void uniformMatrix4fv(const std::string&, GLsizei, GLboolean, const GLfloat*);
 

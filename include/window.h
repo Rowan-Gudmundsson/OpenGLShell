@@ -7,10 +7,10 @@
 class Window {
   public:
     // Constructors
-    Window();
+    Window(Options*);
 
     // Setup functions
-    bool Initialize(const std::string&, int&, int&);
+    bool Initialize();
 
     // Runtime functions
     void Swap();
@@ -19,6 +19,7 @@ class Window {
     ~Window();
 
   private:
+    Options* options;
     SDL_Window* m_window;
     SDL_GLContext m_context;
 };

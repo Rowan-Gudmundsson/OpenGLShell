@@ -1,10 +1,10 @@
 #include "window.h"
 
-Window::Window() {
+Window::Window(Options* _options) : options(_options) {
   m_window = nullptr;
 }
 
-bool Window::Initialize(const std::string& name, int& width, int& height) {
+bool Window::Initialize() {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cout << "SDL failed to initialize: " << SDL_GetError() << std::endl;
     return false;
@@ -24,26 +24,26 @@ bool Window::Initialize(const std::string& name, int& width, int& height) {
   SDL_GetCurrentDisplayMode(0, &current);
 
   // If fullscreen, create fullscreen window
-  if (height == 0 && width == 0) {
+  if (options->window.height == 0 && options->window.width == 0) {
     m_window = SDL_CreateWindow(
-      name.c_str(),
+      options->window.name.c_str(),
       SDL_WINDOWPOS_CENTERED,
       SDL_WINDOWPOS_CENTERED,
-      width,
-      height,
+      options->window.width,
+      options->window.height,
       SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP
     );
-    width = current.w;
-    height = current.h;
+    options->window.width = current.w;
+    options->window.height = current.h;
   }
 
   // Else create window with width and height
   m_window = SDL_CreateWindow(
-    name.c_str(),
+    options->window.name.c_str(),
     SDL_WINDOWPOS_UNDEFINED,
     SDL_WINDOWPOS_UNDEFINED,
-    width,
-    height,
+    options->window.width,
+    options->window.height,
     SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE
   );
 

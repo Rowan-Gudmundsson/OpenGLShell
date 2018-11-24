@@ -1,8 +1,8 @@
 #include "graphics.h"
 
-Graphics::Graphics() {}
+Graphics::Graphics(Options* _options) : options(_options) {}
 
-bool Graphics::Initialize(int width, int height) {
+bool Graphics::Initialize() {
   // Used for the linux OS
   #if !defined(__APPLE__) && !defined(MACOSX)
     // cout << glewGetString(GLEW_VERSION) << endl;
@@ -40,7 +40,7 @@ bool Graphics::Initialize(int width, int height) {
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
 
-  if (!InitializeCamera(width, height)) {
+  if (!InitializeCamera()) {
     std::cout << "Camera failed to initialize." << std::endl;
     return false;
   }
@@ -49,28 +49,21 @@ bool Graphics::Initialize(int width, int height) {
   return true;
 }
 
-bool Graphics::InitializeCamera(int width, int height) {
+bool Graphics::InitializeCamera() {
   m_projection_matrix = glm::perspective(
-    glm::radians(45.0f), // 45 degree FOV
-    float(width) / float(height), // Aspect ratio
-    0.01f, // Dist to near plane
-    100.0f // Dist to far plane
+    options->eye.FOV,
+    float(options->window.width) / float(options->window.height), // Aspect ratio
+    options->eye.near_plane, // Dist to near plane
+    options->eye.far_plane // Dist to far plane
   );
 
-  glm::vec3 camera_position(5.0f, 5.0f, 0.0f);
-  glm::vec3 camera_look_at(0.0f, 0.0f, 0.0f);
-
-  m_view_matrix = glm::lookAt(
-    camera_position, // Where the camera is
-    camera_look_at, // Where the camera is pointing
-    glm::vec3(0.0f, 1.0f, 0.0f) // Which way is up
-  );
+  UpdateCamera();
 
   // No potential for error here
   return true;
 }
 
-void Graphics::AddObject(std::string shader_name, Object* object) {
+void Graphics::AddObject(std::string shader_name, Object* object, bool is_root) {
   Shader* tmp = Shader::LoadShader(shader_name);
   m_shader_list[shader_name] = tmp;
 
@@ -80,7 +73,19 @@ void Graphics::AddObject(std::string shader_name, Object* object) {
     std::vector<Object*> temp(1, object);
     m_render_list[shader_name] = temp;
   }
-  m_objects.push_back(object);
+  if (is_root) {
+    m_objects.push_back(object);
+  }
+}
+
+void Graphics::AddPointLight(json light) {
+  PointLight point_light(light);
+  m_point_lights.push_back(point_light);
+}
+
+void Graphics::AddDirectionalLight(json light) {
+  DirectionalLight directional_light(light);
+  m_directional_lights.push_back(directional_light);
 }
 
 void Graphics::Update(unsigned dt) {
@@ -89,6 +94,54 @@ void Graphics::Update(unsigned dt) {
   for (auto i : m_objects) {
     i->Update(dt);
   }
+}
+
+void Graphics::UpdateCamera() {
+  // Rotate <1.0, 0.0, 0.0> around <0.0, 1.0, 0.0> by theta degrees
+  options->eye.position = glm::rotate(glm::vec3(1.0, 0.0, 0.0), options->eye.theta, glm::vec3(0.0, 1.0, 0.0));
+  // Find the vector perpendicular to <pos.x, pos.y pos.z> and <0.0, 1.0, 0.0>
+  glm::vec3 around = glm::cross(options->eye.position, glm::vec3(0.0, 1.0, 0.0));
+  // Rotate the posision vector around the perpendicular vector by phi degrees
+  options->eye.position = glm::rotate(options->eye.position, options->eye.phi, around);
+  // Find the direction of the vector
+  options->eye.position = glm::normalize(options->eye.position);
+  // And multiply it by the length
+  options->eye.position *= options->eye.r;
+  // Then shift the origin of the vector to where we're looking
+  options->eye.position += options->eye.look_at;
+
+  m_view_matrix = glm::lookAt(
+    options->eye.position, // Position of the camera
+    options->eye.look_at, // Where the camera is pointing
+    glm::vec3(0.0, 1.0, 0.0) // Which direction is up
+  );
+}
+
+void Graphics::UpdateCamera(float x, float y) {
+  // Update our horizontal angle
+  options->eye.theta += x * CAMERA_MOVE_DELTA;
+  // Update vertical angle
+  options->eye.phi += y * CAMERA_MOVE_DELTA / 4;
+  // Make sure vertical angle is not 0
+  if (options->eye.phi == M_PI / 2 || options->eye.phi == -M_PI / 2) options->eye.phi = options->eye.phi > 0
+    ? M_PI / 2 - 0.1f
+    : -M_PI / 2 + 0.1f;
+
+  // Update our view matrix
+  UpdateCamera();
+}
+
+void Graphics::UpdateCamera(int zoom) {
+  if (zoom > 0) { // If scrolling up
+    // Increase radius
+    options->eye.r += CAMERA_ZOOM_DELTA;
+  } else if (zoom < 0) { // Else if scrolling down
+    // Decrease radius
+    options->eye.r -= CAMERA_ZOOM_DELTA;
+  }
+
+  // Update our view matrix
+  UpdateCamera();
 }
 
 void Graphics::Render() {
@@ -104,8 +157,27 @@ void Graphics::Render() {
 
   // Itterate through through our shaders
   for (auto i : m_shader_list) {
+    // If the shader failed to load
+    if (i.second == nullptr) continue;
     // Enable the current shader
     i.second->Enable();
+
+    for (unsigned j = 0; j < m_point_lights.size(); j++) {
+      std::string basename = "point_lights[" + std::to_string(j) + "]";
+      i.second->uniform3fv(basename + ".light_position", 1, glm::value_ptr(m_point_lights[j].position));
+      i.second->uniform3fv(basename + ".light_color", 1, glm::value_ptr(m_point_lights[j].color));
+      i.second->uniform1f(basename + ".light_strength", m_point_lights[j].strength);
+    }
+
+    for (unsigned j = 0; j < m_directional_lights.size(); j++) {
+      std::string basename = "dir_lights[" + std::to_string(j) + "]";
+      i.second->uniform3fv(basename + ".light_position", 1, glm::value_ptr(m_directional_lights[j].position));
+      i.second->uniform3fv(basename + ".light_direction", 1, glm::value_ptr(m_directional_lights[j].direction));
+      i.second->uniform3fv(basename + ".light_color", 1, glm::value_ptr(m_directional_lights[j].color));
+      i.second->uniform1f(basename + ".light_strength", m_directional_lights[j].strength);
+      i.second->uniform1f(basename + ".outer_angle", m_directional_lights[j].outer_angle);
+      i.second->uniform1f(basename + ".inner_angle", m_directional_lights[j].inner_angle);
+    }
 
     // Send uniforms to shader
     i.second->uniformMatrix4fv("proj_view_matrix", 1, GL_FALSE, glm::value_ptr(proj_view));
@@ -155,10 +227,12 @@ Graphics::~Graphics() {
     delete i.second;
     i.second = nullptr;
   }
+  m_shader_list.clear();
 
   // Itterate through objects and delete
   for (auto i : m_objects) {
     delete i;
     i = nullptr;
   }
+  m_objects.clear();
 }

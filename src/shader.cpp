@@ -159,6 +159,17 @@ void Shader::uniform1i(const std::string& name, GLint value) {
   glUniform1i(location, value);
 }
 
+void Shader::uniform1f(const std::string& name, GLfloat value) {
+  GLint location = GetUniformLocation(name);
+
+  if (location == INVALID_UNIFORM_LOCATION) {
+    std::cout << "Invalid location of uniform (" << name << ")" << std::endl;
+    return;
+  }
+
+  glUniform1f(location, value);
+}
+
 void Shader::uniform3fv(const std::string& name, GLsizei size, const GLfloat* value) {
   GLint location = GetUniformLocation(name);
 

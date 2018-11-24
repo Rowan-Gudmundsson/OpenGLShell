@@ -1,0 +1,130 @@
+{
+  "EYE": {
+    "FOV": 45.0,
+    "NEAR_PLANE": 0.1,
+    "FAR_PLANE": 100.0,
+    "TPR": [0.0, 0.8, 64.0]
+  },
+  "LIGHTS": [
+    {
+      "TYPE": "point",
+      "LIGHT_POSITION": [4.0, -0.8, 1.0],
+      "LIGHT_COLOR": [1.0, 1.0, 1.0],
+      "LIGHT_STRENGTH": 0.0
+    },
+    {
+      "TYPE": "point",
+      "LIGHT_POSITION": [4.0, -0.8, -1.5],
+      "LIGHT_COLOR": [1.0, 1.0, 1.0],
+      "LIGHT_STRENGTH": 0.0
+    },
+    {
+      "TYPE": "point",
+      "LIGHT_POSITION": [-2.5, -0.9, 1.0],
+      "LIGHT_COLOR": [1.0, 1.0, 1.0],
+      "LIGHT_STRENGTH": 0.0
+    },
+    {
+      "TYPE": "point",
+      "LIGHT_POSITION": [-2.5, -0.9, 1.0],
+      "LIGHT_COLOR": [1.0, 1.0, 1.0],
+      "LIGHT_STRENGTH": 0.0
+    },
+    {
+      "TYPE": "point",
+      "LIGHT_POSITION": [-1.0, -0.9, 0.0],
+      "LIGHT_COLOR": [1.0, 1.0, 1.0],
+      "LIGHT_STRENGTH": 0.0
+    },
+    {
+      "TYPE": "point",
+      "LIGHT_POSITION": [0.0, 100.0, 0.0],
+      "LIGHT_COLOR": [1.0, 1.0, 1.0],
+      "LIGHT_STRENGTH": 100.0
+    },
+    {
+      "TYPE": "directional",
+      "LIGHT_POSITION": [10.0, 20.0, 0.0],
+      "LIGHT_DIRECTION": [-10, -20.0, 0.0],
+      "LIGHT_COLOR": [1.0, 1.0, 1.0],
+      "LIGHT_STRENGTH": 0.0,
+      "OUTER_ANGLE": 4.0,
+      "INNER_ANGLE": 1.5,
+      "FOLLOWING": true
+    },
+    {
+      "TYPE": "directional",
+      "LIGHT_POSITION": [0.0, 10.0, 5.0],
+      "LIGHT_DIRECTION": [0.0, -20, -10.0],
+      "LIGHT_COLOR": [1.0, 1.0, 1.0],
+      "LIGHT_STRENGTH": 0.0,
+      "OUTER_ANGLE": 4.0,
+      "INNER_ANGLE": 1.5,
+      "FOLLOWING": true
+    },
+    {
+      "TYPE": "directional",
+      "LIGHT_POSITION": [0.0, 10.0, -5.0],
+      "LIGHT_DIRECTION": [0.0, -20, 10.0],
+      "LIGHT_COLOR": [1.0, 1.0, 1.0],
+      "LIGHT_STRENGTH": 0.0,
+      "OUTER_ANGLE": 4.0,
+      "INNER_ANGLE": 1.5,
+      "FOLLOWING": true
+    }
+  ],
+  "OBJECTS": [
+    {
+      "NAME": "Ground",
+      "TRANSFORM": {
+        "SCALE": 1.0,
+        "ROTATION": [0.0, 0.0, 0.0],
+        "POSITION": [0.0, 0.0, 0.0],
+        "COLLISION_TYPE": 1,
+        "MESH_TYPE": 4
+      },
+      "MODEL": "ground.obj",
+      "SHADER": "tex_shader",
+      "DEPENDANTS": []
+    },
+    {
+      "NAME": "Path",
+      "TRANSFORM": {
+        "SCALE": 1.0,
+        "ROTATION": [0.0, 0.0, 0.0],
+        "POSITION": [0.0, 0.0, 0.0],
+        "COLLISION_TYPE": 1,
+        "MESH_TYPE": 4
+      },
+      "MODEL": "path.obj",
+      "SHADER": "tex_normal_shader",
+      "DEPENDANTS": []
+    },
+    {
+      "NAME": "House",
+      "TRANSFORM": {
+        "SCALE": 1.0,
+        "ROTATION": [0.0, 0.0, 0.0],
+        "POSITION": [0.0, 3.0, 0.0],
+        "COLLISION_TYPE": 1,
+        "MESH_TYPE": 4
+      },
+      "MODEL": "house.obj",
+      "SHADER": "tex_shader",
+      "DEPENDANTS": []
+    },
+    {
+      "NAME": "Tree",
+      "TRANSFORM": {
+        "SCALE": 1.0,
+        "ROTATION": [0.0, 0.0, 0.0],
+        "POSITION": [-4.5, 0.0, 2.5],
+        "COLLISION_TYPE": 1,
+        "MESH_TYPE": 4
+      },
+      "MODEL": "tree.obj",
+      "SHADER": "tex_shader",
+      "DEPENDANTS": []
+    }
+  ]
+}

@@ -15,22 +15,32 @@ class Engine {
     // Setup functions
     bool Initialize();
     void LoadGameObjects();
+    void LoadLights();
+    Object* ParseConfig(json);
 
     // Runtime functions
     void Run();
     unsigned int GetDT();
     long long GetCurrentTimeMillis();
 
+    // Event handlers
+    void KeyDown();
+    void KeyUp();
+    void MouseDown();
+    void MouseUp();
+    void MouseMove();
+
     // Destructors
     ~Engine();
 
   private:
+    struct EventOptions {
+      bool mouse_pressed;
+      int click_x = 0, click_y = 0;
+    } m_event_options;
+
+    Options options;
     Window* m_window;
-    struct WindowInfo {
-      std::string name;
-      int width, height;
-      bool fullscreen;
-    } w_info;
 
     SDL_Event m_event;
 
